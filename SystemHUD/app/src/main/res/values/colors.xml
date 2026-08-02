@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="hud_bg">#050B14</color>
+    <color name="hud_accent">#7FD6FF</color>
+    <color name="hud_accent_dim">#3FA9DC</color>
+    <color name="hud_glow">#33B7FF</color>
+    <color name="hud_panel">#0D1B2E</color>
+    <color name="hud_text">#D9F4FF</color>
+    <color name="hud_text_dim">#7FA9C2</color>
+</resources>
