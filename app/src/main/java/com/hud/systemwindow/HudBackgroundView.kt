@@ -12,10 +12,17 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 
 /**
- * Draws the misty, glowing "holographic glass" background seen in the
- * reference art: a deep-blue radial glow behind the frame plus faint
- * diagonal light streaks, with a slow real pulse animation
- * (ValueAnimator driving repaints — no fake/looping GIF, actual draw calls).
+ * Draws the frosted "glass" tint that sits on top of the REAL device
+ * wallpaper (shown behind the window via android:windowShowWallpaper,
+ * see themes.xml + MainActivity's window blur setup — real Android
+ * APIs, not a fake/painted backdrop).
+ *
+ * This view is intentionally translucent: it only adds a deep-blue
+ * night tint, a soft pulsing glow, and faint diagonal glass reflection
+ * streaks — the same "glass panel over your wallpaper" effect shown in
+ * the reference concept's "REAL TRANSPARENT GLASS LOOK" callout.
+ * It never paints a fully opaque color, or the wallpaper underneath
+ * would be hidden again.
  */
 class HudBackgroundView @JvmOverloads constructor(
     context: Context,
@@ -23,7 +30,8 @@ class HudBackgroundView @JvmOverloads constructor(
 ) : View(context, attrs) {
 
     private var pulse = 0.75f
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val tintPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val streakPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 40f
@@ -55,12 +63,15 @@ class HudBackgroundView @JvmOverloads constructor(
         val h = height.toFloat()
         if (w <= 0f || h <= 0f) return
 
-        // base near-black backdrop
-        canvas.drawColor(0xFF050B14.toInt())
+        // Flat, semi-transparent night-blue tint over the real wallpaper —
+        // NOT drawColor() at full alpha, so whatever is behind the window
+        // (the device's actual wallpaper) still shows through.
+        tintPaint.color = 0xB0060C16.toInt()
+        canvas.drawRect(0f, 0f, w, h, tintPaint)
 
-        // deep blue nebula glow, centered, pulsing in intensity
-        val glowAlpha = (pulse * 140).toInt().coerceIn(60, 150)
-        paint.shader = RadialGradient(
+        // Soft pulsing blue glow, also translucent, centered like the reference.
+        val glowAlpha = (pulse * 100).toInt().coerceIn(30, 110)
+        glowPaint.shader = RadialGradient(
             w / 2f, h * 0.42f, kotlin.math.max(w, h) * 0.75f,
             intArrayOf(
                 (glowAlpha shl 24) or 0x1E5FA8,
@@ -70,9 +81,9 @@ class HudBackgroundView @JvmOverloads constructor(
             floatArrayOf(0f, 0.45f, 1f),
             Shader.TileMode.CLAMP
         )
-        canvas.drawRect(0f, 0f, w, h, paint)
+        canvas.drawRect(0f, 0f, w, h, glowPaint)
 
-        // faint diagonal glass reflection streaks, top-left to bottom-right
+        // Faint diagonal glass reflection streaks, top-left to bottom-right.
         streakPaint.shader = LinearGradient(
             0f, 0f, w * 0.4f, h,
             0x00FFFFFF, 0x14FFFFFF, Shader.TileMode.CLAMP

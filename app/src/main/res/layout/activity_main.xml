@@ -1,129 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Two separate zones, matching the reference:
+    1) "windowPanel" — the glass system-window frame (HudBackgroundView +
+       HudFrameView) holding ONLY the window controls + clock/date/weather.
+       It does NOT stretch edge-to-edge; it sits inset from the status bar
+       and stops well above the bottom, same proportions as the
+       "HOW IT LOOKS ON PHONE" mockup.
+    2) The bottom nav dashboard — OUTSIDE the frame's neon border, in its
+       own row below it with a visible gap, exactly like the reference
+       (the dashboard icons are not enclosed by the glowing frame).
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/hud_bg">
-
-    <com.hud.systemwindow.HudBackgroundView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.hud.systemwindow.HudFrameView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingStart="34dp"
-        android:paddingEnd="34dp"
-        android:paddingTop="28dp"
-        android:paddingBottom="20dp">
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:paddingTop="22dp"
+        android:paddingBottom="22dp">
 
-        <!-- Window controls -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end|center_vertical">
-
-            <ImageButton
-                android:id="@+id/btnMinimize"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_minimize"
-                android:contentDescription="Minimize" />
-
-            <ImageButton
-                android:id="@+id/btnMaximize"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_maximize"
-                android:contentDescription="Maximize" />
-
-            <ImageButton
-                android:id="@+id/btnClose"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_close"
-                android:contentDescription="Close" />
-        </LinearLayout>
-
-        <!-- Center content: scrollable so landscape (short height) never clips it -->
-        <ScrollView
+        <!-- ===== Zone 1: the glass system-window frame (clock only) ===== -->
+        <FrameLayout
+            android:id="@+id/windowPanel"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true"
-            android:scrollbars="none">
+            android:layout_weight="1">
+
+            <com.hud.systemwindow.HudBackgroundView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.hud.systemwindow.HudFrameView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:paddingStart="26dp"
+                android:paddingEnd="26dp"
+                android:paddingTop="22dp"
+                android:paddingBottom="18dp">
 
-                <TextView
-                    android:id="@+id/tvClock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00:00"
-                    android:textColor="@color/hud_text"
-                    android:textSize="56sp"
-                    android:fontFamily="sans-serif-thin"
-                    android:letterSpacing="0.05"
-                    android:shadowColor="#7FD6FF"
-                    android:shadowRadius="18"
-                    android:shadowDx="0"
-                    android:shadowDy="0" />
-
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="—"
-                    android:textColor="@color/hud_text_dim"
-                    android:textSize="14sp"
-                    android:letterSpacing="0.15" />
-
+                <!-- Window controls -->
                 <LinearLayout
-                    android:id="@+id/weatherCard"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:background="@drawable/bg_panel">
+                    android:gravity="end|center_vertical">
 
-                    <TextView
-                        android:id="@+id/tvWeather"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Weather: add API key in Settings"
-                        android:textColor="@color/hud_text_dim"
-                        android:textSize="12sp" />
+                    <ImageButton
+                        android:id="@+id/btnMinimize"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_minimize"
+                        android:contentDescription="Minimize" />
+
+                    <ImageButton
+                        android:id="@+id/btnMaximize"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_maximize"
+                        android:contentDescription="Maximize" />
+
+                    <ImageButton
+                        android:id="@+id/btnClose"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_close"
+                        android:contentDescription="Close" />
                 </LinearLayout>
 
-            </LinearLayout>
-        </ScrollView>
+                <!-- Center content: scrollable so short/landscape screens never clip it -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
 
-        <!-- Bottom nav -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvClock"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="@color/hud_text"
+                            android:textSize="56sp"
+                            android:fontFamily="sans-serif-thin"
+                            android:letterSpacing="0.05"
+                            android:shadowColor="#7FD6FF"
+                            android:shadowRadius="18"
+                            android:shadowDx="0"
+                            android:shadowDy="0" />
+
+                        <TextView
+                            android:id="@+id/tvDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="—"
+                            android:textColor="@color/hud_text_dim"
+                            android:textSize="14sp"
+                            android:letterSpacing="0.15" />
+
+                        <LinearLayout
+                            android:id="@+id/weatherCard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="22dp"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:background="@drawable/bg_panel">
+
+                            <TextView
+                                android:id="@+id/tvWeather"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Weather: add API key in Settings"
+                                android:textColor="@color/hud_text_dim"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Gap between the frame's bottom edge and the dashboard below it —
+             the dashboard is NOT inside the frame's neon border. -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="26dp" />
+
+        <!-- ===== Zone 2: bottom nav dashboard — outside the frame ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="5"
-            android:paddingTop="8dp">
+            android:weightSum="5">
 
             <LinearLayout android:id="@+id/navHome" style="@style/NavItem">
                 <FrameLayout style="@style/NavIconChip">

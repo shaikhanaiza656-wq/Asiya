@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.SystemHUD" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowBackground">@color/hud_bg</item>
-        <item name="android:statusBarColor">@color/hud_bg</item>
-        <item name="android:navigationBarColor">@color/hud_bg</item>
+        <!-- Real Android "show wallpaper behind window" flag (same one live launchers use).
+             This is what makes the frame sit on top of the ACTUAL device wallpaper
+             instead of a flat painted color, matching the "REAL TRANSPARENT GLASS LOOK"
+             callout in the reference concept. No storage permission needed for this. -->
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowFullscreen">false</item>
         <item name="colorPrimary">@color/hud_accent</item>
         <item name="colorAccent">@color/hud_accent</item>

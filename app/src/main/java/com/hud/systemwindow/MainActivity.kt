@@ -4,9 +4,11 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -34,6 +36,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Real Android 12+ window blur API: blurs whatever is actually behind
+        // the window (the live wallpaper) so the glass panel reads as frosted,
+        // exactly like the reference's "REAL TRANSPARENT GLASS LOOK" callout.
+        // No-op (sharp wallpaper, still real — not painted) on older Android.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+            window.attributes = window.attributes.apply { blurBehindRadius = 80 }
+        }
 
         tvClock = findViewById(R.id.tvClock)
         tvDate = findViewById(R.id.tvDate)
