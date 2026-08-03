@@ -28,4 +28,16 @@ object Prefs {
     fun setTasksJson(context: Context, json: String) {
         prefs(context).edit().putString(KEY_TASKS, json).apply()
     }
+
+    /** Persisted drag offset (in px) for a movable HUD element, keyed by its own id string. */
+    fun getDragOffset(context: Context, key: String): Pair<Float, Float> {
+        val p = prefs(context)
+        val x = p.getFloat(key + "_x", 0f)
+        val y = p.getFloat(key + "_y", 0f)
+        return x to y
+    }
+
+    fun setDragOffset(context: Context, key: String, x: Float, y: Float) {
+        prefs(context).edit().putFloat(key + "_x", x).putFloat(key + "_y", y).apply()
+    }
 }

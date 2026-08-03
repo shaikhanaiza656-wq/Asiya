@@ -4,11 +4,12 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowManager
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewConfiguration
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -36,15 +37,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Real Android 12+ window blur API: blurs whatever is actually behind
-        // the window (the live wallpaper) so the glass panel reads as frosted,
-        // exactly like the reference's "REAL TRANSPARENT GLASS LOOK" callout.
-        // No-op (sharp wallpaper, still real — not painted) on older Android.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-            window.attributes = window.attributes.apply { blurBehindRadius = 80 }
-        }
 
         tvClock = findViewById(R.id.tvClock)
         tvDate = findViewById(R.id.tvDate)
@@ -75,7 +67,68 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
+        // Real drag-to-reposition: user can press-and-drag the clock or the
+        // weather panel anywhere inside the frame; the offset is saved to
+        // SharedPreferences (Prefs) and restored next time the app opens.
+        makeDraggable(findViewById(R.id.clockGroup), "clock_pos")
+        makeDraggable(findViewById(R.id.weatherCard), "weather_pos")
+
         requestLocationAndWeather()
+    }
+
+    /**
+     * Attaches real touch-driven dragging to [view]: press, move beyond the
+     * system touch-slop, and the view follows the finger via translationX/Y.
+     * A plain tap (no meaningful movement) is left alone so it still works
+     * normally. Position persists across restarts under [prefsKey].
+     */
+    private fun makeDraggable(view: View, prefsKey: String) {
+        val touchSlop = ViewConfiguration.get(this).scaledTouchSlop
+        var downRawX = 0f
+        var downRawY = 0f
+        var startTransX = 0f
+        var startTransY = 0f
+        var dragging = false
+
+        // restore saved position once the view has been laid out
+        view.post {
+            val (savedX, savedY) = Prefs.getDragOffset(this, prefsKey)
+            view.translationX = savedX
+            view.translationY = savedY
+        }
+
+        view.setOnTouchListener { v, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    downRawX = event.rawX
+                    downRawY = event.rawY
+                    startTransX = v.translationX
+                    startTransY = v.translationY
+                    dragging = false
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val dx = event.rawX - downRawX
+                    val dy = event.rawY - downRawY
+                    if (!dragging && (kotlin.math.abs(dx) > touchSlop || kotlin.math.abs(dy) > touchSlop)) {
+                        dragging = true
+                    }
+                    if (dragging) {
+                        v.translationX = startTransX + dx
+                        v.translationY = startTransY + dy
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    if (dragging) {
+                        Prefs.setDragOffset(this, prefsKey, v.translationX, v.translationY)
+                    }
+                    dragging = false
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onResume() {
