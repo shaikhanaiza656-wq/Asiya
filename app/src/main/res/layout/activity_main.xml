@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/hud_bg">
 
+    <com.hud.systemwindow.HudBackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.hud.systemwindow.HudFrameView
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -15,7 +19,7 @@
         android:paddingStart="34dp"
         android:paddingEnd="34dp"
         android:paddingTop="28dp"
-        android:paddingBottom="26dp">
+        android:paddingBottom="20dp">
 
         <!-- Window controls -->
         <LinearLayout
@@ -50,57 +54,68 @@
                 android:contentDescription="Close" />
         </LinearLayout>
 
-        <!-- Center content -->
-        <LinearLayout
+        <!-- Center content: scrollable so landscape (short height) never clips it -->
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/tvClock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:textColor="@color/hud_text"
-                android:textSize="56sp"
-                android:fontFamily="sans-serif-thin"
-                android:letterSpacing="0.05" />
-
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="—"
-                android:textColor="@color/hud_text_dim"
-                android:textSize="14sp"
-                android:letterSpacing="0.15" />
+            android:fillViewport="true"
+            android:scrollbars="none">
 
             <LinearLayout
-                android:id="@+id/weatherCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:background="@drawable/bg_panel">
+                android:gravity="center">
 
                 <TextView
-                    android:id="@+id/tvWeather"
+                    android:id="@+id/tvClock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Weather: add API key in Settings"
-                    android:textColor="@color/hud_text_dim"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    android:text="00:00"
+                    android:textColor="@color/hud_text"
+                    android:textSize="56sp"
+                    android:fontFamily="sans-serif-thin"
+                    android:letterSpacing="0.05"
+                    android:shadowColor="#7FD6FF"
+                    android:shadowRadius="18"
+                    android:shadowDx="0"
+                    android:shadowDy="0" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="—"
+                    android:textColor="@color/hud_text_dim"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.15" />
+
+                <LinearLayout
+                    android:id="@+id/weatherCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@drawable/bg_panel">
+
+                    <TextView
+                        android:id="@+id/tvWeather"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Weather: add API key in Settings"
+                        android:textColor="@color/hud_text_dim"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
 
         <!-- Bottom nav -->
         <LinearLayout
@@ -108,30 +123,40 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="5"
-            android:paddingTop="10dp">
+            android:paddingTop="8dp">
 
             <LinearLayout android:id="@+id/navHome" style="@style/NavItem">
-                <ImageView style="@style/NavIcon" android:src="@drawable/ic_home" />
+                <FrameLayout style="@style/NavIconChip">
+                    <ImageView style="@style/NavIcon" android:src="@drawable/ic_home" />
+                </FrameLayout>
                 <TextView style="@style/NavLabel" android:text="HOME" />
             </LinearLayout>
 
             <LinearLayout android:id="@+id/navTasks" style="@style/NavItem">
-                <ImageView style="@style/NavIcon" android:src="@drawable/ic_tasks" />
+                <FrameLayout style="@style/NavIconChip">
+                    <ImageView style="@style/NavIcon" android:src="@drawable/ic_tasks" />
+                </FrameLayout>
                 <TextView style="@style/NavLabel" android:text="TASKS" />
             </LinearLayout>
 
             <LinearLayout android:id="@+id/navFiles" style="@style/NavItem">
-                <ImageView style="@style/NavIcon" android:src="@drawable/ic_files" />
+                <FrameLayout style="@style/NavIconChip">
+                    <ImageView style="@style/NavIcon" android:src="@drawable/ic_files" />
+                </FrameLayout>
                 <TextView style="@style/NavLabel" android:text="FILES" />
             </LinearLayout>
 
             <LinearLayout android:id="@+id/navTools" style="@style/NavItem">
-                <ImageView style="@style/NavIcon" android:src="@drawable/ic_tools" />
+                <FrameLayout style="@style/NavIconChip">
+                    <ImageView style="@style/NavIcon" android:src="@drawable/ic_tools" />
+                </FrameLayout>
                 <TextView style="@style/NavLabel" android:text="TOOLS" />
             </LinearLayout>
 
             <LinearLayout android:id="@+id/navSettings" style="@style/NavItem">
-                <ImageView style="@style/NavIcon" android:src="@drawable/ic_settings" />
+                <FrameLayout style="@style/NavIconChip">
+                    <ImageView style="@style/NavIcon" android:src="@drawable/ic_settings" />
+                </FrameLayout>
                 <TextView style="@style/NavLabel" android:text="SETTINGS" />
             </LinearLayout>
 

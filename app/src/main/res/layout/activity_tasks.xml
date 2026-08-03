@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/hud_bg">
 
+    <com.hud.systemwindow.HudBackgroundView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.hud.systemwindow.HudFrameView
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
